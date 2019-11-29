@@ -12,3 +12,13 @@ Android and/or iOS.
 For help getting started with Flutter, view our 
 [online documentation](https://flutter.dev/docs), which offers tutorials, 
 samples, guidance on mobile development, and a full API reference.
+
+## Android
+### add these dependencies to build.gradle
+- implementation 'com.squareup.okhttp3:okhttp:3.8.1'
+- implementation 'com.googlecode.json-simple:json-simple:1.1'
+- implementation project(path: ':LCTrustedSDK')
+
+## iOS
+
+Add LCTrustedSDK.framework
