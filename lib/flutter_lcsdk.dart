@@ -20,12 +20,33 @@ class FlutterLCSDK {
   }
 
   static Future<bool> createIdentity(String challenge) async {
-    return await _channel
-        .invokeMethod('createIdentity', {'challenge': challenge});
+    try {
+      final Map result = await _channel
+          .invokeMethod('createIdentity', {'challenge': challenge});
+      if (result.containsKey('status')) {
+        return result["status"];
+      }
+    } catch (e) {
+      print(e);
+    }
+    return false;
   }
 
   static Future<String> signMessage(String message) async {
-    return await _channel.invokeMethod('signMessage', {'message': message});
+    try {
+      final Map result =
+          await _channel.invokeMethod('signMessage', {'message': message});
+
+      if (result.containsKey("status")) {
+        if (result["status"]) {
+          return result["message"];
+        }
+      }
+    } catch (e) {
+      print(e);
+    }
+
+    return null;
   }
 
   static Future<String> get getVersion async {

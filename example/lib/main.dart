@@ -15,7 +15,7 @@ class _MyAppState extends State<MyApp> {
   String _version = 'Unknown';
   String _deviceId = 'Unknown';
   String _message = 'Unknown';
-  String _challenge = '';
+  String _challenge = 'my_challenge';
 
   @override
   void initState() {
@@ -61,7 +61,7 @@ class _MyAppState extends State<MyApp> {
   Future<String> _signMessage() async {
     String message = "my message";
     final String signedMessage = await FlutterLCSDK.signMessage(message);
-
+    print(signedMessage);
     setState(() {
       this._message = signedMessage;
     });
@@ -136,7 +136,7 @@ class _MyAppState extends State<MyApp> {
                 SizedBox(
                   width: 10,
                 ),
-                Text("Message: $_isIdentityExists")
+                Text("$_isIdentityExists")
               ],
             ),
             Row(
@@ -150,7 +150,7 @@ class _MyAppState extends State<MyApp> {
                 SizedBox(
                   width: 10,
                 ),
-                Text("Message: $_message")
+                Text("Created: $_created")
               ],
             ),
             Row(

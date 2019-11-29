@@ -1,17 +1,19 @@
 package com.directpay.flutter_lanka_clear_sdk;
 
-import android.content.Context;
+import android.app.Activity;
 
 import com.lankaclear.justpay.LCTrustedSDK;
 import com.lankaclear.justpay.callbacks.CreateIdentityCallback;
 import com.lankaclear.justpay.callbacks.SignMessageCallback;
+
+import java.util.HashMap;
 
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.PluginRegistry;
 
 public class FlutterLankaClearSdkPlugin implements MethodChannel.MethodCallHandler {
-    Context context;
+    Activity activity;
     LCTrustedSDK lcTrustedSDK;
 
     public static void registerWith(PluginRegistry.Registrar registrar) {
@@ -19,9 +21,9 @@ public class FlutterLankaClearSdkPlugin implements MethodChannel.MethodCallHandl
         channel.setMethodCallHandler(new FlutterLankaClearSdkPlugin(registrar.activity()));
     }
 
-    FlutterLankaClearSdkPlugin(Context context) {
-        this.context = context;
-        lcTrustedSDK = new LCTrustedSDK(context);
+    FlutterLankaClearSdkPlugin(Activity activity) {
+        this.activity = activity;
+        lcTrustedSDK = new LCTrustedSDK(activity);
     }
 
     @Override
@@ -34,7 +36,13 @@ public class FlutterLankaClearSdkPlugin implements MethodChannel.MethodCallHandl
             lcTrustedSDK.signMessage(message, new SignMessageCallback() {
                 @Override
                 public void onSuccess(String message, String status) {
-                    result.success(message);
+                    HashMap<String, Object> resultMap = new HashMap<>();
+
+                    resultMap.put("status", true);
+                    resultMap.put("statusCode", status);
+                    resultMap.put("message", message);
+
+                    result.success(resultMap);
                 }
 
                 @Override
@@ -56,12 +64,28 @@ public class FlutterLankaClearSdkPlugin implements MethodChannel.MethodCallHandl
             lcTrustedSDK.createIdentity(challenge, new CreateIdentityCallback() {
                 @Override
                 public void onSuccess() {
-                    result.success(true);
+                    final HashMap<String, Object> resultMap = new HashMap<>();
+
+                    resultMap.put("status", true);
+                    resultMap.put("code", 0);
+                    resultMap.put("message", "success");
+
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            result.success(resultMap);
+                        }
+                    });
                 }
 
                 @Override
-                public void onFailed(int i, String s) {
-                    result.error("FAILED TO CREATE IDENTITY", s, i);
+                public void onFailed(final int i, final String s) {
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            result.error("FAILED TO CREATE IDENTITY", s, i);
+                        }
+                    });
                 }
             });
         } else {
