@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'dart:async';
 
 import 'package:flutter_lanka_clear_sdk/flutter_lcsdk.dart';
@@ -39,11 +40,18 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<bool> _createIdentity() async {
-    _challenge = "";
-    bool created = await FlutterLCSDK.createIdentity(this._challenge);
-    setState(() {
-      this._created = created;
-    });
+    _challenge = "test challenge";
+    try {
+      bool created = await FlutterLCSDK.createIdentity(this._challenge);
+      setState(() {
+        this._created = created;
+      });
+    } on PlatformException catch (e) {
+      print(e);
+      setState(() {
+        this._created = false;
+      });
+    }
 
     return _created;
   }
@@ -60,11 +68,19 @@ class _MyAppState extends State<MyApp> {
 
   Future<String> _signMessage() async {
     String message = "my message";
-    final String signedMessage = await FlutterLCSDK.signMessage(message);
-    print(signedMessage);
-    setState(() {
-      this._message = signedMessage;
-    });
+
+    try {
+      final String signedMessage = await FlutterLCSDK.signMessage(message);
+      print(signedMessage);
+      setState(() {
+        this._message = signedMessage;
+      });
+    } on PlatformException catch (e) {
+      print(e);
+      setState(() {
+        this._message = e.message;
+      });
+    }
 
     return _message;
   }

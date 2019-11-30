@@ -21,11 +21,9 @@ class FlutterLCSDK {
 
   static Future<bool> createIdentity(String challenge) async {
     try {
-      final Map result = await _channel
+      final bool result = await _channel
           .invokeMethod('createIdentity', {'challenge': challenge});
-      if (result.containsKey('status')) {
-        return result["status"];
-      }
+      return result;
     } catch (e) {
       print(e);
     }
@@ -34,14 +32,10 @@ class FlutterLCSDK {
 
   static Future<String> signMessage(String message) async {
     try {
-      final Map result =
+      final String result =
           await _channel.invokeMethod('signMessage', {'message': message});
 
-      if (result.containsKey("status")) {
-        if (result["status"]) {
-          return result["message"];
-        }
-      }
+      return result;
     } catch (e) {
       print(e);
     }

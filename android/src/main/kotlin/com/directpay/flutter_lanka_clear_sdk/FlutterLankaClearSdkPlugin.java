@@ -35,19 +35,23 @@ public class FlutterLankaClearSdkPlugin implements MethodChannel.MethodCallHandl
 
             lcTrustedSDK.signMessage(message, new SignMessageCallback() {
                 @Override
-                public void onSuccess(String message, String status) {
-                    HashMap<String, Object> resultMap = new HashMap<>();
-
-                    resultMap.put("status", true);
-                    resultMap.put("statusCode", status);
-                    resultMap.put("message", message);
-
-                    result.success(resultMap);
+                public void onSuccess(final String message, String status) {
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            result.success(message);
+                        }
+                    });
                 }
 
                 @Override
-                public void onFailed(int i, String s) {
-                    result.error("FAILED TO CREATE IDENTITY", s, i);
+                public void onFailed(final int i, final String s) {
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            result.error(String.valueOf(i), s, null);
+                        }
+                    });
                 }
             });
         } else if (methodCall.method.equals("isIdentityExist")) {
@@ -65,15 +69,10 @@ public class FlutterLankaClearSdkPlugin implements MethodChannel.MethodCallHandl
                 @Override
                 public void onSuccess() {
                     final HashMap<String, Object> resultMap = new HashMap<>();
-
-                    resultMap.put("status", true);
-                    resultMap.put("code", 0);
-                    resultMap.put("message", "success");
-
                     activity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            result.success(resultMap);
+                            result.success(true);
                         }
                     });
                 }
@@ -83,7 +82,7 @@ public class FlutterLankaClearSdkPlugin implements MethodChannel.MethodCallHandl
                     activity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            result.error("FAILED TO CREATE IDENTITY", s, i);
+                            result.error(String.valueOf(i), s, null);
                         }
                     });
                 }

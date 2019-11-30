@@ -9,51 +9,33 @@ public class SwiftFlutterLankaClearSdkPlugin: NSObject, FlutterPlugin, LCIdentit
     public func onIdentitySuccess() {
         if(self.identityResult != nil){
             print("IDENITY_SUCCESS")
-            let result:NSDictionary = [
-                "status": true,
-                "code" : 0,
-                "message" : "success"
-            ]
-            
-            identityResult!(result)
+            self.processResult(result: self.identityResult!, data: true)
         }
     }
     
     public func onIdentityFailed(_ errorCode: Int32, message errorMessage: String!) {
         if(self.identityResult != nil){
             print("IDENITY_FAILED", errorCode, errorMessage)
-            let result:NSDictionary = [
-                "status": false,
-                "code" : errorCode,
-                "message" : errorMessage
-            ]
-            
-            identityResult!(result)
+            self.processResult(result: self.identityResult!, data: FlutterError(code: String(errorCode), message: errorMessage, details: nil))
         }
     }
     
     public func onMessageSignSuccess(_ signedMessage: String!, status: String!) {
         if(self.signResult != nil){
-            let result:NSDictionary = [
-                "status" : true,
-                "statusCode" : status,
-                "message" : signedMessage
-            ]
-            
-            self.signResult!(result)
+            self.processResult(result: self.signResult!, data: signedMessage)
         }
     }
     
     public func onMessageSignFailed(_ errorCode: Int32, message errorMessage: String!) {
         print("MESSAGE_SIGN_FAILED", errorCode, errorMessage)
         if(self.signResult != nil){
-            let result:NSDictionary = [
-                "status" : false,
-                "statusCode" : String(errorCode),
-                "message" : errorMessage
-            ]
-            
-            self.signResult!(result)
+            self.processResult(result: self.signResult!, data: FlutterError(code: String(errorCode), message: errorMessage, details: nil))
+        }
+    }
+    
+    func processResult(result:@escaping FlutterResult, data: Any){
+        DispatchQueue.main.async {
+            result(data)
         }
     }
     
