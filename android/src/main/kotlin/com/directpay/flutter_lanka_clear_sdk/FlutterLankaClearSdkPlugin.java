@@ -1,12 +1,16 @@
 package com.directpay.flutter_lanka_clear_sdk;
 
 import android.app.Activity;
+import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Looper;
 
 import com.lankaclear.justpay.LCTrustedSDK;
 import com.lankaclear.justpay.callbacks.CreateIdentityCallback;
 import com.lankaclear.justpay.callbacks.SignMessageCallback;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -68,8 +72,7 @@ public class FlutterLankaClearSdkPlugin implements MethodChannel.MethodCallHandl
             lcTrustedSDK.createIdentity(challenge, new CreateIdentityCallback() {
                 @Override
                 public void onSuccess() {
-                    final HashMap<String, Object> resultMap = new HashMap<>();
-                    activity.runOnUiThread(new Runnable() {
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
                         public void run() {
                             result.success(true);
@@ -79,7 +82,7 @@ public class FlutterLankaClearSdkPlugin implements MethodChannel.MethodCallHandl
 
                 @Override
                 public void onFailed(final int i, final String s) {
-                    activity.runOnUiThread(new Runnable() {
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
                         public void run() {
                             result.error(String.valueOf(i), s, null);
