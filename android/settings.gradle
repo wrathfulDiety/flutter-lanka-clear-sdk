@@ -1,0 +1,2 @@
+rootProject.name = 'flutter_lanka_clear_sdk'
+include ':LCTrustedSDK'
