@@ -1,5 +1,5 @@
 //  LCTrustedSDK
-//  Version 1.0
+//  Version 1.0.1
 
 #ifndef LCTrustedSDK_h
 #define LCTrustedSDK_h
