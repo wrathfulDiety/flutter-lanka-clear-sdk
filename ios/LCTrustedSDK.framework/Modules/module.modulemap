@@ -1,0 +1,6 @@
+framework module LCTrustedSDK {
+  umbrella header "LCTrustedSDK.h"
+
+  export *
+  module * { export * }
+}
