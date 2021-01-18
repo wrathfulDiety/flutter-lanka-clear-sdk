@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-import 'package:flutter_lanka_clear_sdk/flutter_lanka_clear_sdk.dart';
+import 'package:flutter_lanka_clear_sdk/flutter_lcsdk.dart';
 
 void main() => runApp(MyApp());
 
